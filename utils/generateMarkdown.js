@@ -1,20 +1,61 @@
-// TODO: Create a function that returns a license badge based on which license is passed in
-// If there is no license, return an empty string
-function renderLicenseBadge(license) {}
+// Import function for all badges + links
+const generateBadges = require('../utils/generateBadge');
 
-// TODO: Create a function that returns the license link
-// If there is no license, return an empty string
-function renderLicenseLink(license) {}
+// Function to generate Table of Contents
+const generateTableOfContents = confirmToC => {
+  if (!confirmToC) {
+    return '';
+  }
 
-// TODO: Create a function that returns the license section of README
-// If there is no license, return an empty string
-function renderLicenseSection(license) {}
+  return `
+  ## Table of Contents
+  * [Installation](#installation)
+  * [Usage](#usage)
+  * [License](#license)
+  * [Contribution](#contribution)
+  * [Tests](#tests)
+  * [Questions](#questions)
+  `;
+};
 
-// TODO: Create a function to generate markdown for README
-function generateMarkdown(data) {
-  return `# ${data.title}
+// Generate markdown for README
+const generateMarkdown = data => {
+  
+  const {
+    gitUser,
+    email,
+    projectTitle,
+    projectDesc,
+    installationInfo,
+    usageInfo,
+    contributionInfo,
+    testInfo,
+    licenseInfo,
+    tableContents
+  } = data;
 
-`;
+  return `
+  # ${projectTitle}
+  ${generateBadges(licenseInfo)}
+  ## Description
+  ${projectDesc}
+  ${generateTableOfContents(tableContents)}
+  
+  ## Installation
+  ${installationInfo}
+  ## Usage
+  ${usageInfo}
+  ## License
+  This application is covered under the ${licenseInfo} license
+  ## Contribution
+  ${contributionInfo}
+  ## Tests
+  ${testInfo}
+  ## Questions?
+  Find me on Github here: [${gitUser}](https://github.com/${gitUser})
+
+  Or you can email me at ${email}
+  `;
 }
 
 module.exports = generateMarkdown;
