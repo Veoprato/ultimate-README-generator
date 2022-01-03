@@ -1,7 +1,9 @@
 const inquirer = require('inquirer');
+const fs = require('fs');
+const generateMarkdown = require('./utils/generateMarkdown.js');
 
-// TODO: Create an array of questions for user input
-const questions = portfolioData => {
+// Question array for user
+const userQuestions = () => {
     console.log(`
 ██╗   ██╗██╗  ████████╗██╗███╗   ███╗ █████╗ ████████╗███████╗    ██████╗ ███████╗ █████╗ ██████╗ ███╗   ███╗███████╗
 ██║   ██║██║  ╚══██╔══╝██║████╗ ████║██╔══██╗╚══██╔══╝██╔════╝    ██╔══██╗██╔════╝██╔══██╗██╔══██╗████╗ ████║██╔════╝
@@ -94,14 +96,41 @@ const questions = portfolioData => {
             default: true
         }
     ])
-    .then(answers => console.log(answers));
+    // .then(answers => console.log(answers));
 }
 
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+// Function to write README file
+const writeFile = fileContent => {
+    return new Promise((resolve, reject) => {
+        fs.writeFile('./dist/README.md', fileContent, error => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            resolve({
+                ok: true,
+                message: 'File created!'
+            });
+        });
+    });
+};
 
-// TODO: Create a function to initialize app
-function init() {}
 
+// Function to initialize app
+function init() {
+    userQuestions()
+        .then(data => {
+            return generateMarkdown(data);
+        })
+        .then(pageMD => {
+            return writeFile(pageMD);
+        })
+        .then(writeFileResponse => {
+            console.log(writeFileResponse);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+};
 // Function call to initialize app
-questions();
+init();
